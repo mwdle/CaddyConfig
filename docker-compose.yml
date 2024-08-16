@@ -1,0 +1,62 @@
+services:
+  Caddy:
+    image: caddy:latest
+    container_name: Caddy
+    restart: unless-stopped
+    hostname: caddy
+    ports:
+      - 443:443/tcp
+      - 443:443/udp
+    networks:
+      Adguard:
+      # Speed up connections from HA to cloud.mwdle.com by connecting directly via Caddy.
+      Nextcloud:
+        aliases:
+          - cloud.mwdle.com
+      CloudflareTunnel:
+      Speedtest:
+      APA:
+      VPA:
+      Frigate:
+      # Home assistant connects to music assistant directly via Caddy (necessary for HA HTTPS access to MA Music Art Proxy, mixed content is not allowed in browser and Home Assistant doesn't have access to host machine since it is in a MACVlan).
+      HomeAssistant:
+        aliases:
+          - ma.mwdle.com
+      Navidrome:
+      MusicAssistant:
+    volumes:
+      - ${DOCKER_VOLUMES}/Caddy/Caddyfile:/etc/caddy/Caddyfile
+      - ${DOCKER_VOLUMES}/Caddy/data:/data
+      - ${DOCKER_VOLUMES}/Caddy/config:/config
+
+networks:
+  Adguard:
+    name: Adguard
+    external: true
+  Nextcloud:
+    name: Nextcloud
+    external: true
+  CloudflareTunnel:
+    name: CloudflareTunnel
+    external: true
+  Speedtest:
+    name: Speedtest
+    external: true
+  VPA:
+    name: VPA
+    external: true
+  APA:
+    name: APA
+    external: true
+  Frigate:
+    name: Frigate
+    external: true
+  HomeAssistant:
+    name: HomeAssistant
+    external: true
+  MusicAssistant:
+    name: MusicAssistant
+    external: true
+  Navidrome:
+    name: Navidrome
+    external: true
