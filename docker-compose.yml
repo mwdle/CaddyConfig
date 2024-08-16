@@ -22,7 +22,6 @@ services:
       HomeAssistant:
         aliases:
           - ma.mwdle.com
-      Navidrome:
       MusicAssistant:
     volumes:
       - ${DOCKER_VOLUMES}/Caddy/Caddyfile:/etc/caddy/Caddyfile
@@ -56,7 +55,4 @@ networks:
     external: true
   MusicAssistant:
     name: MusicAssistant
-    external: true
-  Navidrome:
-    name: Navidrome
     external: true
