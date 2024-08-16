@@ -9,7 +9,7 @@ A sample Caddyfile and Docker Compose file for Caddy.
 ### Starting the container  
 
 In your terminal, ```cd``` to the directory containing the ```docker-compose.yml``` and ```.env``` files. Run the following command: ```docker compose up -d```  
-Your container should be up and running and your Adguard Home Dashboard will be accessible after you configure your reverse proxy and connect your Docker Networks accordingly! DNS will be available on port 53 on the host machine.  
+Your container should be up and running and your Caddy instance should be operating according to your Caddyfile.  
 
 ### Disclaimer  
 
