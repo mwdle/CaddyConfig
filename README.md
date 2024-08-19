@@ -17,16 +17,26 @@ A sample Caddyfile and Docker Compose file for Caddy.
     git clone https://github.com/mwdle/CaddyConfig.git
     ```  
 
-2. Change the ```.env``` file properties:  
+2. Create a folder on your system for Docker bind mounts / storing container files. The folder should have the following structure:  
 
-    ```properties
-    DOCKER_VOLUMES=<PATH_TO_DOCKER_VOLUMES> # A folder on your system to store bind mounts for Docker containers.
+    ```shell
+    docker_volumes/
+    ├── Caddy/
+    │   ├── Caddyfile
+    │   ├── config/
+    │   └── data/
     ```  
 
-3. Copy the contents of CADDYFILE_SAMPLE into the DOCKER_VOLUMES folder specified in step 3 under a subfolder called Caddy (e.g. DOCKER_VOLUMES/Caddy/Caddyfile). Modify the Caddyfile to fit your needs.  
-4. Change the networks listed in the Docker Compose file to the networks attached to the service(s) you want to proxy.  
-5. Open a terminal in the directory containing the docker-compose file.  
-6. Start the container:  
+3. Change the ```.env``` file properties for your configuration:  
+
+    ```properties
+    DOCKER_VOLUMES=<PATH_TO_DOCKER_VOLUMES_FOLDER> # The folder created in the previous step.
+    ```  
+
+4. Copy the contents of Caddyfile_sample into DOCKER_VOLUMES/Caddy/Caddyfile as shown in the folder structure in step 2.  
+5. Change the networks listed in the Docker Compose file to the networks attached to the service(s) you want to proxy.  
+6. Open a terminal in the directory containing the docker-compose file.  
+7. Start the container:  
 
     ```shell
     docker compose up -d
