@@ -1,8 +1,8 @@
 # Trusted proxy configuration
 {
 	servers {
-        # Assumes your docker networks are in the 172.16.0.0/16 range (not the usual 172.16.0.0/12 range).
-		trusted_proxies static 172.16.0.0/16
+        # Assumes your docker networks are in the default 172.16.0.0/12 range
+		trusted_proxies static 172.16.0.0/12
 		trusted_proxies_strict
         # Use client IP provided by Cloudflare before any other.
 		client_ip_headers Cf-Connecting-Ip X-Forwarded-For X-Real-IP
