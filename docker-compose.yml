@@ -21,7 +21,7 @@ services:
       # Home assistant connects to music assistant directly via Caddy (necessary for HA HTTPS access to MA Music Art Proxy, mixed content is not allowed in browser and Home Assistant doesn't have access to host machine since it is in a MACVlan).
       HomeAssistant:
         aliases:
-          - ma.mwdle.com
+          - music.mwdle.com
       MusicAssistant:
     volumes:
       - ${DOCKER_VOLUMES}/Caddy/Caddyfile:/etc/caddy/Caddyfile
