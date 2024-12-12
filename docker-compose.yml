@@ -18,10 +18,12 @@ services:
       APA:
       VPA:
       Frigate:
-      # Home assistant connects to music assistant directly via Caddy (necessary for HA HTTPS access to MA Music Art Proxy, mixed content is not allowed in browser and Home Assistant doesn't have access to host machine since it is in a MACVlan).
+      # Home assistant connects to Music Assistant via Caddy instead of Docker network for HTTPS access/MA Music Art Proxy (mixed content in browser).
+      # Home assistant connects to Frigate via Caddy instead of Docker network for HTTPS access, Frigate Authentication, and the ability to place HA and Frigate in different Docker networks, resulting in enhanced security.
       HomeAssistant:
         aliases:
           - music.mwdle.com
+          - frigate.mwdle.com
       MusicAssistant:
     volumes:
       - ${DOCKER_VOLUMES}/Caddy/Caddyfile:/etc/caddy/Caddyfile
