@@ -31,6 +31,10 @@ A sample Caddyfile and Docker Compose file for Caddy.
 
     ```properties
     DOCKER_VOLUMES=<PATH_TO_DOCKER_VOLUMES_FOLDER> # The folder created in the previous step.
+    # The following variables aren't generally necessary. I use them to ensure my Home Assistant container routes all connections to my Nextcloud/Music Assistant/Frigate instance internally via my Reverse Proxy which has aliases for these hostnames.
+    NEXTCLOUD_HOSTNAME=<HOSTNAME_OF_YOUR_NEXTCLOUD_INSTANCE>
+    MA_HOSTNAME=<HOSTNAME_OF_YOUR_MA_INSTANCE>
+    FRIGATE_HOSTNAME=<HOSTNAME_OF_YOUR_FRIGATE_INSTANCE>
     ```  
 
 4. Copy the contents of Caddyfile_sample into DOCKER_VOLUMES/Caddy/Caddyfile as shown in the folder structure in step 2.  
