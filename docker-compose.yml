@@ -9,21 +9,20 @@ services:
       - 443:443/udp
     networks:
       Adguard:
-      # Speed up connections from HA to cloud.mwdle.com by connecting directly via Caddy.
       Nextcloud:
-        aliases:
-          - cloud.mwdle.com
       CloudflareTunnel:
       Speedtest:
       APA:
       VPA:
       Frigate:
+      # Home assistant connects to Nextcloud via Caddy instead of Docker network for no external routing.
       # Home assistant connects to Music Assistant via Caddy instead of Docker network for HTTPS access/MA Music Art Proxy (mixed content in browser).
       # Home assistant connects to Frigate via Caddy instead of Docker network for HTTPS access, Frigate Authentication, and the ability to place HA and Frigate in different Docker networks, resulting in enhanced security.
       HomeAssistant:
         aliases:
-          - music.mwdle.com
-          - frigate.mwdle.com
+          - ${MA_HOSTNAME}
+          - ${FRIGATE_HOSTNAME}
+          - ${NEXTCLOUD_HOSTNAME}
       MusicAssistant:
     volumes:
       - ${DOCKER_VOLUMES}/Caddy/Caddyfile:/etc/caddy/Caddyfile
