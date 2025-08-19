@@ -1,0 +1,242 @@
+# WARNING! THIS CADDYFILE IS NOT AUTOMATICALLY MOUNTED INTO THE CONTAINER in compose.yaml. If you want to mount this file from this directory, in compose.yaml replace ${DOCKER_VOLUMES}/Caddyfile with ${PWD}/Caddyfile.
+
+{
+        email {env.EMAIL}
+        acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+        servers {
+                trusted_proxies static {$TRUSTED_PROXIES}
+                trusted_proxies_strict
+                client_ip_headers Cf-Connecting-Ip X-Forwarded-For X-Real-IP
+        }
+}
+
+(required) {
+        header {
+                ?Cache-Control "max-age=43200, must-revalidate"
+                Strict-Transport-Security "max-age=15552000; includeSubDomains; preload"
+                ?X-Content-Type-Options "nosniff"
+                ?X-Frame-Options "DENY"
+                Referrer-Policy "strict-origin-when-cross-origin"
+                -Server
+                -Via
+                -X-Powered-By
+        }
+}
+
+(perms) {
+        header {
+                ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), bluetooth=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), speaker-selection=(), usb=(), web-share=(), xr-spatial-tracking=()"
+        }
+}
+
+(cors) {
+        header {
+                ?Cross-Origin-Embedder-Policy "require-corp"
+                ?Cross-Origin-Opener-Policy "same-origin"
+                ?Cross-Origin-Resource-Policy "same-origin"
+        }
+}
+
+(embedder_cors) {
+        header {
+                ?Cross-Origin-Embedder-Policy "credentialless"
+                ?Cross-Origin-Opener-Policy "same-origin"
+                ?Cross-Origin-Resource-Policy "same-origin"
+        }
+}
+
+(resource_cors) {
+        header {
+                ?Cross-Origin-Embedder-Policy "credentialless"
+                ?Cross-Origin-Opener-Policy "same-origin"
+                ?Cross-Origin-Resource-Policy "cross-origin"
+        }
+}
+
+(csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'none'; script-src 'none'; img-src 'none'; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'none'; worker-src 'none';"
+        }
+}
+
+(nextcloud_perms) {
+        header {
+                ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(self), bluetooth=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), speaker-selection=(), usb=(), web-share=(), xr-spatial-tracking=()"
+        }
+}
+
+{$NEXTCLOUD_HOSTNAME} {
+        reverse_proxy Nextcloud
+        import required
+        import embedder_cors
+        import nextcloud_perms
+}
+
+(speedtest_csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self'; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'self';"
+        }
+}
+
+{$SPEEDTEST_HOSTNAME} {
+        reverse_proxy Speedtest
+        import required
+        import cors
+        import perms
+        import speedtest_csp
+}
+
+(adguard_csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'none';"
+        }
+}
+
+{$ADGUARD_HOSTNAME} {
+        reverse_proxy Adguard
+        import required
+        import cors
+        import perms
+        import adguard_csp
+}
+
+(homeassistant_perms) {
+        header {
+                ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), bluetooth=(), display-capture=(), encrypted-media=(), fullscreen=(self), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), speaker-selection=(self), usb=(), web-share=(), xr-spatial-tracking=()"
+        }
+}
+
+(homeassistant_csp) {
+        header {
+                Content-Security-Policy "default-src 'none'; frame-src 'self' https://{$MA_HOSTNAME} https://{$FRIGATE_HOSTNAME}; manifest-src 'self'; object-src 'none'; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https://{$MA_HOSTNAME} https://misc.scdn.co https://i.scdn.co https://*.spotifycdn.com https://img.shields.io https://*.home-assistant.io https://*.basemaps.cartocdn.com https://*.githubusercontent.com https://basemaps.cartocdn.com; media-src 'self' blob:; frame-ancestors 'none'; form-action 'none'; connect-src 'self' data: https://*.home-assistant.io https://*.githubusercontent.com; worker-src 'self';"
+        }
+}
+
+{$HA_HOSTNAME} {
+        reverse_proxy HomeAssistant:8123
+        import required
+        import embedder_cors
+        import homeassistant_perms
+        import homeassistant_csp
+}
+
+(vpa_csp) {
+        header {
+                Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' blob:; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'none';"
+        }
+}
+
+{$VPA_HOSTNAME} {
+        reverse_proxy VPA
+        import required
+        import cors
+        import perms
+        import vpa_csp
+}
+
+(frigate_csp) {
+        header {
+                Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'self' data:; object-src 'none'; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data:; media-src 'self' blob:; frame-ancestors https://{$HA_HOSTNAME}; form-action 'none'; connect-src 'self'; worker-src 'self' blob:;"
+        }
+}
+
+(frigate_perms) {
+        header {
+                ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), bluetooth=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), speaker-selection=(), usb=(), web-share=(), xr-spatial-tracking=()"
+        }
+}
+
+{$FRIGATE_HOSTNAME} {
+        reverse_proxy /api/webrtc* Frigate:1984
+        reverse_proxy Frigate:8971 {
+                transport http {
+                        tls_insecure_skip_verify # Frigate serves https on port 8971 with self signed certficate - skip verification
+                }
+        }
+        import required
+        import resource_cors
+        import frigate_perms
+        import frigate_csp
+}
+
+(ma_csp) {
+        header {
+                Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'self'; object-src 'none'; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data: https://images.weserv.nl https://i.scdn.co https://ui-avatars.com; media-src 'none'; frame-ancestors 'self' https://{$HA_HOSTNAME}; form-action 'none'; connect-src 'self'; worker-src 'none';"
+        }
+}
+
+{$MA_HOSTNAME} {
+        reverse_proxy MusicAssistant:8095
+        import required
+        import resource_cors
+        import perms
+        import ma_csp
+}
+
+{$COCKPIT_HOSTNAME} {
+        reverse_proxy https://host.docker.internal:9090 {
+                transport http {
+                        tls_insecure_skip_verify # Cockpit serves https on port 9090 with self signed certficate - skip verification
+                }
+        }
+        import required
+        import cors
+        import perms
+        import csp # Strict Fallback - Cockpit already provides a CSP
+}
+
+{$VAULTWARDEN_HOSTNAME} {
+        reverse_proxy Vaultwarden:80
+        import required
+        import cors
+        import perms
+        import csp # Strict Fallback - Vaultwarden already provides a CSP
+}
+
+(openwebui_csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'self'; object-src 'none'; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://img.shields.io https://*.blob.core.windows.net; media-src 'self'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'self' blob:;"
+        }
+}
+
+(openwebui_perms) {
+        header {
+                ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), bluetooth=(), camera=(), display-capture=(self), encrypted-media=(), fullscreen=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), speaker-selection=(), usb=(), web-share=(), xr-spatial-tracking=()"
+        }
+}
+
+{$OPENWEBUI_HOSTNAME} {
+        reverse_proxy OpenWebUI:8080
+        import required
+        import cors
+        import openwebui_perms
+        import openwebui_csp
+}
+
+(gitea_csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src data:; object-src 'none'; font-src data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https://img.shields.io  https://media.giphy.com https://komarev.com https://github-readme-stats.vercel.app https://raw.githubusercontent.com https://avatars.githubusercontent.com; media-src 'none'; frame-ancestors 'none'; form-action 'self' http://127.0.0.1:*; connect-src 'self'; worker-src 'self';"
+        }
+}
+
+{$GITEA_HOSTNAME} {
+        reverse_proxy Gitea:3000
+        import required
+        import embedder_cors
+        import perms
+        import gitea_csp
+}
+
+(jenkins_csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; media-src 'none'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'; worker-src 'none';"
+        }
+}
+
+{$JENKINS_HOSTNAME} {
+        reverse_proxy Jenkins:8080
+        import required
+        import cors
+        import perms
+        import jenkins_csp
+}
