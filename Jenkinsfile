@@ -1,11 +1,11 @@
-// Define job properties and parameters
-def jobProperties = [
+// Define and apply job properties and parameters
+properties([
     parameters([
         booleanParam(name: 'PULL_IMAGES', defaultValue: false, description: 'Pull latest images before deployment'),
         booleanParam(name: 'FORCE_DOWN', defaultValue: false, description: 'Force docker compose down before deployment'),
         booleanParam(name: 'UPDATE_PARAMETERS_NO_BUILD', defaultValue: false, description: 'Set this to true to update build parameters without executing deployment')
     ])
-]
+])
 
 // First build registers parameters and exits
 if (env.BUILD_NUMBER == '1') {
@@ -14,20 +14,9 @@ if (env.BUILD_NUMBER == '1') {
     Please re-run the job if you want to start a real deployment.
     Skipping build...
     """
-    properties(jobProperties)
     currentBuild.result = 'NOT_BUILT'
     return
 }
-
-// Skip builds triggered by branch indexing after the initial build
-if (currentBuild.getBuildCauses().toString().contains('BranchIndexingCause')) {
-    echo "Skipping build triggered by branch indexing after the first build"
-    currentBuild.result = 'NOT_BUILT'
-    return
-}
-
-// Apply job properties
-properties(jobProperties)
 
 // If update parameters only mode is enabled, save parameters and exit
 if (params.UPDATE_PARAMETERS_NO_BUILD) {
@@ -39,7 +28,7 @@ if (params.UPDATE_PARAMETERS_NO_BUILD) {
 
 pipeline {
     agent {
-        label 'docker'
+        label 'docker' // See JCasC (jenkins.yaml)
     }
     
     options {
