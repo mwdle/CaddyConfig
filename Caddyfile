@@ -1,4 +1,4 @@
-# WARNING! THIS CADDYFILE IS NOT AUTOMATICALLY MOUNTED INTO THE CONTAINER in compose.yaml. If you want to mount this file from this directory, in compose.yaml replace ${DOCKER_VOLUMES}/Caddyfile with ${PWD}/Caddyfile.
+# WARNING! THIS CADDYFILE IS NOT AUTOMATICALLY MOUNTED INTO THE CONTAINER in compose.yaml. If you want to mount this file from this directory, in compose.yaml replace ${DOCKER_VOLUMES}/Caddyfile with ./Caddyfile.
 
 {
         email {env.EMAIL}
