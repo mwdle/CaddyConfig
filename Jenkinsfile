@@ -14,18 +14,19 @@ def withBitwardenSecrets(Closure body) {
             bw login --apikey
         '''
         
-        // Step 2: Get session token cleanly
+        // Step 2: Get session token cleanly using --passwordenv flag
         def sessionToken = sh(
             script: '''
                 set +x
-                echo "$BITWARDEN_MASTER_PASSWORD" | bw unlock --raw
+                bw unlock --raw --passwordenv BITWARDEN_MASTER_PASSWORD
             ''',
             returnStdout: true
         ).trim()
         
-        // Extract repo name from JOB_NAME (e.g., "git.mydomain.com_RepoName_BranchName" -> "RepoName")
-        def repoName = env.JOB_NAME.split('_')[1]
-        
+        // Extract repository name from GIT_URL
+        def repoUrl = env.GIT_URL
+        def repoName = repoUrl.tokenize('/').last().split('\\.git')
+        echo "Repository Name (from GIT_URL): ${repoName}"        
         // Step 3: Retrieve the secret data with clean session (only this outputs to stdout)
         // Use single quotes and shell variable substitution to avoid Groovy interpolation
         def envVars = sh(
