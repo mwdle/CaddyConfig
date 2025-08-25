@@ -1,3 +1,62 @@
+// Secure function to execute closure with Bitwarden secrets
+def withBitwardenSecrets(Closure body) {
+    withCredentials([
+        usernamePassword(credentialsId: 'bitwarden-api-key', 
+                       usernameVariable: 'BW_CLIENTID', 
+                       passwordVariable: 'BW_CLIENTSECRET'),
+        string(credentialsId: 'bitwarden-master-password', 
+               variable: 'BITWARDEN_MASTER_PASSWORD')
+    ]) {
+        def repoName = env.JOB_NAME.tokenize('/').last()
+        
+        // Step 1: Configure and authenticate (separate from data retrieval)
+        sh '''
+            set +x  # Disable command echoing for security
+            bw config server "$BITWARDEN_URL"
+            bw login --apikey
+        '''
+        
+        // Step 2: Get session token cleanly
+        def sessionToken = sh(
+            script: '''
+                set +x
+                echo "$BITWARDEN_MASTER_PASSWORD" | bw unlock --raw
+            ''',
+            returnStdout: true
+        ).trim()
+        
+        // Step 3: Retrieve the secret data with clean session (only this outputs to stdout)
+        // Use single quotes and shell variable substitution to avoid Groovy interpolation
+        def envVars = sh(
+            script: '''
+                set +x
+                bw get item "''' + repoName + '''" --session "''' + sessionToken + '''" | jq -r '.notes'
+            ''',
+            returnStdout: true
+        ).trim()
+        
+        // Step 4: Clean logout
+        sh '''
+            set +x
+            bw logout
+        '''
+        
+        // Parse environment variables in memory only
+        def envList = []
+        envVars.split('\n').each { line ->
+            line = line.trim()
+            if (line && line.contains('=') && !line.startsWith('#')) {
+                envList.add(line)
+            }
+        }
+        
+        // Execute the closure with environment variables set
+        withEnv(envList) {
+            body()
+        }
+    }
+}
+
 // Define and apply job properties and parameters
 properties([
     parameters([
@@ -43,42 +102,23 @@ pipeline {
             }
         }
         
+        stage('Build') {
+            steps {
+                script {
+                    withBitwardenSecrets {
+                        sh '''
+                            docker compose build
+                        '''
+                    }
+                }
+            }
+        }
+        
         stage('Deploy') {
             steps {
-                withCredentials([
-                    usernamePassword(credentialsId: 'bitwarden-api-key', 
-                                   usernameVariable: 'BW_CLIENTID', 
-                                   passwordVariable: 'BW_CLIENTSECRET'),
-                    string(credentialsId: 'bitwarden-master-password', 
-                           variable: 'BITWARDEN_MASTER_PASSWORD')
-                ]) {
-                    script {
-                        def repoName = env.JOB_NAME.tokenize('/').last()
-                        
+                script {
+                    withBitwardenSecrets {
                         sh '''
-                            set +x  # Disable command echoing for security
-                            
-                            # Configure and authenticate with Bitwarden
-                            bw config server "$BITWARDEN_URL"
-                            bw login --apikey
-                            
-                            # Get session and retrieve secrets in one secure operation
-                            export BW_SESSION=$(echo "$BITWARDEN_MASTER_PASSWORD" | bw unlock --raw)
-                            
-                            # Get the secret data and parse it directly in shell
-                            # Export each valid environment variable from the secure note
-                            while IFS= read -r line; do
-                                # Skip empty lines and comments
-                                if [[ -n "$line" && "$line" == *"="* && "$line" != "#"* ]]; then
-                                    # Export each environment variable
-                                    export "$line"
-                                fi
-                            done < <(bw get item "''' + repoName + '''" --session "$BW_SESSION" | jq -r '.notes')
-                            
-                            # Clean logout
-                            bw logout
-                            
-                            # Now run deployment with all environment variables set
                             # Optional: Force down
                             if [ "$FORCE_DOWN" = "true" ]; then
                                 echo "Force down requested"
@@ -88,11 +128,11 @@ pipeline {
                             # Optional: Pull images
                             if [ "$PULL_IMAGES" = "true" ]; then
                                 echo "Pulling latest images"
-                                docker compose pull
+                                docker compose pull --ignore-pull-failures
                             fi
                             
-                            # Deploy with build
-                            docker compose up -d --build
+                            # Deploy
+                            docker compose up -d
                             
                             # Verify deployment
                             echo "Deployment status:"
