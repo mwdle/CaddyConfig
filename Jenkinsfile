@@ -1,62 +1,4 @@
-// Secure function to execute closure with Bitwarden secrets
-def withBitwardenSecrets(Closure body) {
-    withCredentials([
-        usernamePassword(credentialsId: 'bitwarden-api-key', 
-                       usernameVariable: 'BW_CLIENTID', 
-                       passwordVariable: 'BW_CLIENTSECRET'),
-        string(credentialsId: 'bitwarden-master-password', 
-               variable: 'BITWARDEN_MASTER_PASSWORD')
-    ]) {
-        // Step 1: Configure and authenticate (separate from data retrieval)
-        sh '''
-            set +x  # Disable command echoing for security
-            bw config server "$BITWARDEN_SERVER_URL"
-            bw login --apikey
-        '''
-        
-        // Step 2: Get session token cleanly using --passwordenv flag
-        def sessionToken = sh(
-            script: '''
-                set +x
-                bw unlock --raw --passwordenv BITWARDEN_MASTER_PASSWORD
-            ''',
-            returnStdout: true
-        ).trim()
-        
-        // Extract repository name from JOB_NAME
-        def repoName = env.JOB_NAME.split('/')[1]
-        echo "Repository Name (from GIT_URL): ${repoName}"
-        // Step 3: Retrieve the secret data with clean session (only this outputs to stdout)
-        // Use single quotes and shell variable substitution to avoid Groovy interpolation
-        def envVars = sh(
-            script: '''
-                set +x
-                bw get item "''' + repoName + '''" --session "''' + sessionToken + '''" | jq -r '.notes'
-            ''',
-            returnStdout: true
-        ).trim()
-        
-        // Step 4: Clean logout
-        sh '''
-            set +x
-            bw logout
-        '''
-        
-        // Parse environment variables in memory only
-        def envList = []
-        envVars.split('\n').each { line ->
-            line = line.trim()
-            if (line && line.contains('=') && !line.startsWith('#')) {
-                envList.add(line)
-            }
-        }
-        
-        // Execute the closure with environment variables set
-        withEnv(envList) {
-            body()
-        }
-    }
-}
+@Library('JenkinsBitwardenUtils') _
 
 // Define and apply job properties and parameters
 properties([
@@ -86,6 +28,8 @@ if (params.UPDATE_PARAMETERS_NO_BUILD) {
     return
 }
 
+def repoName = env.JOB_NAME.split('/')[1]
+
 pipeline {
     agent {
         label 'docker' // See JCasC (jenkins.yaml)
@@ -106,10 +50,9 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    withBitwardenSecrets {
-                        sh '''
-                            docker compose build
-                        '''
+                    withBitwardenEnv(itemName: repoName) {
+                        echo "=== Building Docker Images ==="
+                        sh 'docker compose build'
                     }
                 }
             }
@@ -118,31 +61,26 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    withBitwardenSecrets {
-                        sh '''
-                            # Optional: Force down
-                            if [ "$FORCE_DOWN" = "true" ]; then
-                                echo "Force down requested"
-                                docker compose down || true
-                            fi
-                            
-                            # Optional: Pull images
-                            if [ "$PULL_IMAGES" = "true" ]; then
-                                echo "Pulling latest images"
-                                docker compose pull --ignore-pull-failures
-                            fi
-                            
-                            # Deploy
-                            docker compose up -d
-                            
-                            # Verify deployment
-                            echo "Deployment status:"
-                            docker compose ps
-                            
-                            # Show recent logs
-                            sleep 3
-                            docker compose logs --tail=10
-                        '''
+                    withBitwardenEnv(itemName: repoName) {
+                        echo "=== Deploying Services ==="
+                        
+                        if (params.FORCE_DOWN) {
+                            echo "Force down requested"
+                            sh 'docker compose down || true'
+                        }
+                        
+                        if (params.PULL_IMAGES) {
+                            echo "Pulling latest images"
+                            sh 'docker compose pull --ignore-pull-failures'
+                        }
+                        
+                        sh 'docker compose up -d'
+                        
+                        echo "Deployment status:"
+                        sh 'docker compose ps'
+                        
+                        sleep 3
+                        sh 'docker compose logs --tail=15'
                     }
                 }
             }
