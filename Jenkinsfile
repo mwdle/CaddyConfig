@@ -7,8 +7,6 @@ def withBitwardenSecrets(Closure body) {
         string(credentialsId: 'bitwarden-master-password', 
                variable: 'BITWARDEN_MASTER_PASSWORD')
     ]) {
-        def repoName = env.JOB_NAME.tokenize('/').last()
-        
         // Step 1: Configure and authenticate (separate from data retrieval)
         sh '''
             set +x  # Disable command echoing for security
@@ -24,6 +22,9 @@ def withBitwardenSecrets(Closure body) {
             ''',
             returnStdout: true
         ).trim()
+        
+        // Extract repo name from JOB_NAME (e.g., "git.mydomain.com_RepoName_BranchName" -> "RepoName")
+        def repoName = env.JOB_NAME.split('_')[1]
         
         // Step 3: Retrieve the secret data with clean session (only this outputs to stdout)
         // Use single quotes and shell variable substitution to avoid Groovy interpolation
