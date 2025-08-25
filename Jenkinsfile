@@ -12,7 +12,7 @@ def withBitwardenSecrets(Closure body) {
         // Step 1: Configure and authenticate (separate from data retrieval)
         sh '''
             set +x  # Disable command echoing for security
-            bw config server "$BITWARDEN_URL"
+            bw config server "$BITWARDEN_SERVER_URL"
             bw login --apikey
         '''
         
