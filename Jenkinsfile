@@ -23,8 +23,8 @@ def withBitwardenSecrets(Closure body) {
             returnStdout: true
         ).trim()
         
-        // Extract repository name from GIT_URL
-        def repoName = env.GIT_URL.replace('.git', '').split('/').last()
+        // Extract repository name from JOB_NAME
+        def repoName = env.JOB_NAME.split('/')[1]
         echo "Repository Name (from GIT_URL): ${repoName}"
         // Step 3: Retrieve the secret data with clean session (only this outputs to stdout)
         // Use single quotes and shell variable substitution to avoid Groovy interpolation
