@@ -54,7 +54,7 @@ services:
       - GITEA_HOSTNAME=${GITEA_HOSTNAME}
       - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
     volumes:
-      - ./Caddy/Caddyfile:/etc/caddy/Caddyfile # Use `./` instead of `${DOCKER_VOLUMES}/` if you wish to mount the Caddyfile from this directory.
+      - ./Caddy/Caddyfile:/etc/caddy/Caddyfile # Use `./` instead of `${DOCKER_VOLUMES}/` if you wish to mount the Caddyfile from this repository.
       - ${DOCKER_VOLUMES}/Caddy/data:/data
       - ${DOCKER_VOLUMES}/Caddy/config:/config
 
