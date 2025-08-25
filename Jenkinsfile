@@ -93,7 +93,7 @@ pipeline {
     
     options {
         skipDefaultCheckout(true)
-        overrideIndexTriggers(true)
+        overrideIndexTriggers(false)
     }
     
     stages {
