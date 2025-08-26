@@ -29,6 +29,7 @@ node('docker') { // Agent label `docker` is defined in JCasC -- see `JCasC/jenki
     }
 
     // Use Bitwarden provided .env variables from secure note for Docker Compose build and deploy
+    // Assumes the associated .env variables are in a secure note in Bitwarden with the same name as the repository
     withBitwardenEnv(itemName: repoName) {
         if (params.COMPOSE_BUILD) {
             stage('Build') {
