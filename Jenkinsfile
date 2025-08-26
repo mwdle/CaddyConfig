@@ -21,6 +21,7 @@ if (env.BUILD_NUMBER == '1') {
 
 def repoName = env.JOB_NAME.split('/')[1]
 
+// Scripted pipeline instead of declarative pipeline allows wrapping multiple stages within `withBitwardenEnv` function from shared library to avoid refetching secrets
 node('docker') {   
     stage('Checkout') {
         checkout scm
@@ -43,7 +44,7 @@ node('docker') {
                 sh 'docker compose pull'
             }
             sh 'docker compose up -d'
-            
+
             echo "Deployment status:"
             sh 'docker compose ps'
             sleep 3
