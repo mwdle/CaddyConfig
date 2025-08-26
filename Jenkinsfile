@@ -22,7 +22,7 @@ if (env.BUILD_NUMBER == '1') {
 def repoName = env.JOB_NAME.split('/')[1]
 
 // Scripted pipeline instead of declarative pipeline allows wrapping multiple stages within `withBitwardenEnv` function from shared library to avoid refetching secrets
-node('docker') {   
+node('docker') { // Agent label `docker` is defined in JCasC -- see `JCasC/jenkins.yaml` in https://github.com/mwdle/JenkinsConfig
     stage('Checkout') {
         checkout scm
     }
