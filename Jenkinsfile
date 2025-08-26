@@ -19,14 +19,6 @@ if (env.BUILD_NUMBER == '1') {
     return
 }
 
-// If update parameters only mode is enabled, save parameters and exit
-if (params.UPDATE_PARAMETERS_NO_BUILD) {
-    echo "Update parameters mode enabled for this job. Deployment will not execute."
-    echo "Successfully saved build parameters!"
-    currentBuild.result = 'NOT_BUILT'
-    return
-}
-
 def repoName = env.JOB_NAME.split('/')[1]
 
 node('docker') {   
