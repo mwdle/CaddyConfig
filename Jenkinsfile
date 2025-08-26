@@ -3,8 +3,9 @@
 // Define and apply job properties and parameters
 properties([
     parameters([
-        booleanParam(name: 'PULL_IMAGES', defaultValue: false, description: 'Pull latest images before deployment'),
-        booleanParam(name: 'COMPOSE_DOWN', defaultValue: false, description: 'Execute `docker compose down` before deployment'),
+        booleanParam(name: 'COMPOSE_BUILD', defaultValue: false, description: 'Execute `docker compose build` before deploying (has no effect if there are no image(s) to build)'),
+        booleanParam(name: 'COMPOSE_DOWN', defaultValue: false, description: 'Execute `docker compose down` before deploying (has no effect if there is no existing project to take down)'),
+        booleanParam(name: 'PULL_IMAGES', defaultValue: false, description: 'Pull latest images(s) before deploying (has no effect if there are no image(s) to pull)')
     ])
 ])
 
@@ -29,6 +30,7 @@ node('docker') { // Agent label `docker` is defined in JCasC -- see `JCasC/jenki
 
     // Use Bitwarden provided .env variables from secure note for Docker Compose build and deploy
     withBitwardenEnv(itemName: repoName) {
+        if (params.)
         stage('Build') {
             echo "=== Building Docker Images ==="
             sh 'docker compose build'
@@ -42,7 +44,7 @@ node('docker') { // Agent label `docker` is defined in JCasC -- see `JCasC/jenki
             }
             if (params.PULL_IMAGES) {
                 echo "Pulling latest images"
-                sh 'docker compose pull'
+                sh 'docker compose pull --ignore-pull-failures'
             }
             sh 'docker compose up -d'
 
