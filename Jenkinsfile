@@ -31,25 +31,21 @@ node('docker') {
             echo "=== Building Docker Images ==="
             sh 'docker compose build'
         }
-        
+
         stage('Deploy') {
             echo "=== Deploying Services ==="
-            
             if (params.FORCE_DOWN) {
-                echo "Force down requested"
+                echo "Force down requested: Executing `docker compose down` before redeploy"
                 sh 'docker compose down || true'
             }
-            
             if (params.PULL_IMAGES) {
                 echo "Pulling latest images"
                 sh 'docker compose pull'
             }
-            
             sh 'docker compose up -d'
             
             echo "Deployment status:"
             sh 'docker compose ps'
-            
             sleep 3
             sh 'docker compose logs --tail=15'
         }
