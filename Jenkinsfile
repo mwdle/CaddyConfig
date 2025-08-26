@@ -47,40 +47,38 @@ pipeline {
             }
         }
         
-        stage('Build') {
-            steps {
-                script {
-                    withBitwardenEnv(itemName: repoName) {
-                        echo "=== Building Docker Images ==="
-                        sh 'docker compose build'
+        withBitwardenEnv(itemName: repoName) {
+            stage('Build') {
+                steps {
+                    script {
+                            echo "=== Building Docker Images ==="
+                            sh 'docker compose build'
                     }
                 }
             }
-        }
-        
-        stage('Deploy') {
-            steps {
-                script {
-                    withBitwardenEnv(itemName: repoName) {
-                        echo "=== Deploying Services ==="
-                        
-                        if (params.FORCE_DOWN) {
-                            echo "Force down requested"
-                            sh 'docker compose down || true'
-                        }
-                        
-                        if (params.PULL_IMAGES) {
-                            echo "Pulling latest images"
-                            sh 'docker compose pull --ignore-pull-failures'
-                        }
-                        
-                        sh 'docker compose up -d'
-                        
-                        echo "Deployment status:"
-                        sh 'docker compose ps'
-                        
-                        sleep 3
-                        sh 'docker compose logs --tail=15'
+            
+            stage('Deploy') {
+                steps {
+                    script {
+                            echo "=== Deploying Services ==="
+                            
+                            if (params.FORCE_DOWN) {
+                                echo "Force down requested"
+                                sh 'docker compose down || true'
+                            }
+                            
+                            if (params.PULL_IMAGES) {
+                                echo "Pulling latest images"
+                                sh 'docker compose pull --ignore-pull-failures'
+                            }
+                            
+                            sh 'docker compose up -d'
+                            
+                            echo "Deployment status:"
+                            sh 'docker compose ps'
+                            
+                            sleep 3
+                            sh 'docker compose logs --tail=15'
                     }
                 }
             }
