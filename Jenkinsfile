@@ -47,19 +47,16 @@ pipeline {
             }
         }
         
-        withBitwardenEnv(itemName: repoName) {
-            stage('Build') {
-                steps {
-                    script {
+        stage('Build and Deploy') {
+            steps {
+                script {
+                    withBitwardenEnv(itemName: repoName) {
+                        stage('Build') {
                             echo "=== Building Docker Images ==="
                             sh 'docker compose build'
-                    }
-                }
-            }
-            
-            stage('Deploy') {
-                steps {
-                    script {
+                        }
+                        
+                        stage('Deploy') {
                             echo "=== Deploying Services ==="
                             
                             if (params.FORCE_DOWN) {
@@ -79,6 +76,7 @@ pipeline {
                             
                             sleep 3
                             sh 'docker compose logs --tail=15'
+                        }
                     }
                 }
             }
