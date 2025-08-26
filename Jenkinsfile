@@ -1,10 +1,10 @@
-@Library('JenkinsBitwardenUtils') _
+@Library('JenkinsBitwardenUtils') _ // See https://github.com/mwdle/JenkinsBitwardenUtils
 
 // Define and apply job properties and parameters
 properties([
     parameters([
         booleanParam(name: 'PULL_IMAGES', defaultValue: false, description: 'Pull latest images before deployment'),
-        booleanParam(name: 'FORCE_DOWN', defaultValue: false, description: 'Force docker compose down before deployment'),
+        booleanParam(name: 'COMPOSE_DOWN', defaultValue: false, description: 'Execute `docker compose down` before deployment'),
     ])
 ])
 
@@ -27,6 +27,7 @@ node('docker') { // Agent label `docker` is defined in JCasC -- see `JCasC/jenki
         checkout scm
     }
 
+    // Use Bitwarden provided .env variables from secure note for Docker Compose build and deploy
     withBitwardenEnv(itemName: repoName) {
         stage('Build') {
             echo "=== Building Docker Images ==="
@@ -35,9 +36,9 @@ node('docker') { // Agent label `docker` is defined in JCasC -- see `JCasC/jenki
 
         stage('Deploy') {
             echo "=== Deploying Services ==="
-            if (params.FORCE_DOWN) {
-                echo "Force down requested: Executing `docker compose down` before redeploy"
-                sh 'docker compose down || true'
+            if (params.COMPOSE_DOWN) {
+                echo "Compose down requested: Executing `docker compose down` before redeploy"
+                sh 'docker compose down'
             }
             if (params.PULL_IMAGES) {
                 echo "Pulling latest images"
