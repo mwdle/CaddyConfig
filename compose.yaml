@@ -1,3 +1,4 @@
+name: Caddy
 services:
   Caddy:
     image: mwdle/caddy:latest
