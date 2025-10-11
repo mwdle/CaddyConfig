@@ -229,7 +229,7 @@
 
 (jenkins_csp) {
         header {
-                ?Content-Security-Policy "default-src 'none'; frame-src 'self'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; media-src 'none'; frame-ancestors 'none'; form-action 'self'; connect-src 'self'; worker-src 'none';"
+                ?Content-Security-Policy "default-src 'none'; frame-src 'self'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; media-src 'none'; frame-ancestors 'self'; form-action 'self'; connect-src 'self'; worker-src 'none';"
         }
 }
 
