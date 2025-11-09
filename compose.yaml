@@ -38,6 +38,9 @@ services:
         aliases:
           - ${GITEA_HOSTNAME} # Jenkins connects to Gitea via Caddy for repository access, webhook configuration, etc.
           - ${VAULTWARDEN_HOSTNAME} # Jenkins connects to Vaultwarden via Caddy for providing credentials.
+      JenkinsAgent:
+        aliases:
+          - ${GITEA_HOSTNAME} # Jenkins agenst connect to Gitea via Caddy for repository cloning.
     environment:
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
       - EMAIL=${EMAIL}
