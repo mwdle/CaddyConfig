@@ -77,6 +77,9 @@
 }
 
 {$SPEEDTEST_HOSTNAME} {
+        tls {
+                alpn http/1.1
+        }
         reverse_proxy Speedtest:3000 {
                 request_buffers 35MiB
                 response_buffers 35MiB
