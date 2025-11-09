@@ -100,3 +100,6 @@ networks:
   Jenkins:
     name: Jenkins
     external: true
+  JenkinsAgent:
+    name: JenkinsAgent
+    external: true
