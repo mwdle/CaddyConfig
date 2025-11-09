@@ -59,6 +59,8 @@ services:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ${DOCKER_VOLUMES}/Caddy/data:/data
       - ${DOCKER_VOLUMES}/Caddy/config:/config
+    security_opt:
+      - seccomp:unconfined
 
 networks:
   Adguard:
