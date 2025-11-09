@@ -78,10 +78,10 @@
 
 {$SPEEDTEST_HOSTNAME} {
         reverse_proxy Speedtest
-        #import required
-        #import cors
-        #import perms
-        #import speedtest_csp
+        import required
+        import cors
+        import perms
+        import speedtest_csp
 }
 
 (adguard_csp) {
