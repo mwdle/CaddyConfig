@@ -82,7 +82,7 @@
                 response_buffers 35MiB
                 flush_interval -1
                 transport http {
-                        versions disable h2 h3
+                        versions 1.1
                 }
         }
         import required
