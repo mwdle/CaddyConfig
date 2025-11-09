@@ -77,6 +77,7 @@
 }
 
 {$SPEEDTEST_HOSTNAME} {
+        protocols h1 # Speedtest requires HTTP1.1 for accurate measurements
         reverse_proxy Speedtest
         import required
         import cors
