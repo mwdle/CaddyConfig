@@ -77,7 +77,11 @@
 }
 
 {$SPEEDTEST_HOSTNAME} {
-        reverse_proxy Speedtest:3000
+        reverse_proxy Speedtest:3000 {
+             request_buffers 35MiB
+             response_buffers 35MiB
+             flush_interval -1
+        }
         import required
         import cors
         import perms
