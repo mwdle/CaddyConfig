@@ -77,7 +77,7 @@
 }
 
 {$SPEEDTEST_HOSTNAME} {
-        reverse_proxy Speedtest
+        reverse_proxy Speedtest:3000
         import required
         import cors
         import perms
