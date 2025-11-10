@@ -80,7 +80,7 @@
         tls { # Force HTTP/1.1 so that LibreSpeed mechanisms function as expected and produce accurate measurements
                 alpn http/1.1
         }
-        reverse_proxy Speedtest
+        reverse_proxy Speedtest:8080
         import required
         import cors
         import perms
