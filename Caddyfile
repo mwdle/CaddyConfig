@@ -80,6 +80,9 @@
         tls { # Force HTTP/1.1 so that LibreSpeed mechanisms function as expected and produce accurate measurements
                 alpn http/1.1
         }
+        header { # Prevent browser from upgrading to HTTP/3
+                -Alt-Svc
+        }
         reverse_proxy Speedtest:8080
         import required
         import cors
