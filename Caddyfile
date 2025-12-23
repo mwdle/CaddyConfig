@@ -244,3 +244,11 @@
         import perms
         import jenkins_csp
 }
+
+{$ESPHOME_HOSTNAME} {
+        reverse_proxy ESPHome:6052
+        import required
+        import cors
+        import perms
+        import csp
+}

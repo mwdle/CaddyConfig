@@ -38,6 +38,7 @@ services:
         aliases:
           - ${GITEA_HOSTNAME} # Jenkins connects to Gitea via Caddy for repository access, webhook configuration, etc.
           - ${VAULTWARDEN_HOSTNAME} # Jenkins connects to Vaultwarden via Caddy for providing credentials.
+      ESPHome:
     environment:
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
       - EMAIL=${EMAIL}
@@ -55,6 +56,7 @@ services:
       - OPENWEBUI_HOSTNAME=${OPENWEBUI_HOSTNAME}
       - GITEA_HOSTNAME=${GITEA_HOSTNAME}
       - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
+      - ESPHOME_HOSTNAME=${ESPHOME_HOSTNAME}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ${DOCKER_VOLUMES}/Caddy/data:/data
@@ -96,4 +98,7 @@ networks:
     external: true
   Jenkins:
     name: Jenkins
+    external: true
+  ESPHome:
+    name: ESPHome
     external: true
