@@ -245,10 +245,16 @@
         import jenkins_csp
 }
 
+(esphome_csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self'; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'none';"
+        }
+}
+
 {$ESPHOME_HOSTNAME} {
         reverse_proxy ESPHome:6052
         import required
         import cors
         import perms
-        import csp
+        import esphome_csp
 }
