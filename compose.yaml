@@ -10,7 +10,7 @@ services:
     hostname: caddy
     ports:
       - 80:80
-      - "443:443/tcp"
+      - "443:443"
       - "443:443/udp"
     # Allow resolving host machine in order to reverse proxy Cockpit
     extra_hosts:
@@ -59,46 +59,37 @@ services:
       - ESPHOME_HOSTNAME=${ESPHOME_HOSTNAME}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
-      - ${DOCKER_VOLUMES}/Caddy/data:/data
-      - ${DOCKER_VOLUMES}/Caddy/config:/config
+      - caddy_data:/data
+      - caddy_config:/config
 
 networks:
   Adguard:
-    name: Adguard
     external: true
   Vaultwarden:
-    name: Vaultwarden
     external: true
   Nextcloud:
-    name: Nextcloud
     external: true
   CloudflareTunnel:
-    name: CloudflareTunnel
     external: true
   Speedtest:
-    name: Speedtest
     external: true
   VPA:
-    name: VPA
     external: true
   Frigate:
-    name: Frigate
     external: true
   HomeAssistant:
-    name: HomeAssistant
     external: true
   MusicAssistant:
-    name: MusicAssistant
     external: true
   OpenWebUI:
-    name: OpenWebUI
     external: true
   Gitea:
-    name: Gitea
     external: true
   Jenkins:
-    name: Jenkins
     external: true
   ESPHome:
-    name: ESPHome
     external: true
+
+volumes:
+  caddy_data:
+  caddy_config:
