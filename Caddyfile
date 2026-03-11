@@ -1,4 +1,5 @@
 {
+        admin off
         email {env.EMAIL}
         acme_dns cloudflare {env.CLOUDFLARE_API_TOKEN}
         servers {
