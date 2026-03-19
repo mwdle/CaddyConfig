@@ -39,6 +39,9 @@ services:
           - ${GITEA_HOSTNAME} # Jenkins connects to Gitea via Caddy for repository access, webhook configuration, etc.
           - ${VAULTWARDEN_HOSTNAME} # Jenkins connects to Vaultwarden via Caddy for providing credentials.
       ESPHome:
+      Renovate:
+        aliases:
+          - ${GITEA_HOSTNAME} # Renovate connects to Gitea via Caddy
     environment:
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
       - EMAIL=${EMAIL}
@@ -88,6 +91,8 @@ networks:
   Jenkins:
     external: true
   ESPHome:
+    external: true
+  Renovate:
     external: true
 
 volumes:
