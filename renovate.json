@@ -4,11 +4,9 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/(^|/)Dockerfile$/"
-      ],
+      "managerFilePatterns": ["**/Dockerfile"],
       "matchStrings": [
-        "xcaddy build\\s--with\\s(?<depName>[^\\s@]+)@(?<currentValue>[^\\s]+)"
+        "xcaddy build\\s+--with\\s+(?<depName>[^\\s@]+)@(?<currentValue>[^\\s]+)"
       ],
       "datasourceTemplate": "go"
     }
