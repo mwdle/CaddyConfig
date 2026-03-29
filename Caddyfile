@@ -132,7 +132,7 @@
 }
 
 {$VPA_HOSTNAME} {
-        reverse_proxy VPA
+        reverse_proxy VPA:3000
         import required
         import cors
         import perms
