@@ -20,7 +20,6 @@ services:
       Vaultwarden:
       Nextcloud:
       CloudflareTunnel:
-      Speedtest:
       VPA:
       Frigate:
       MusicAssistant:
@@ -48,7 +47,6 @@ services:
       - TRUSTED_PROXIES=${TRUSTED_PROXIES}
       - LOG_FILE=/data/access.log
       - NEXTCLOUD_HOSTNAME=${NEXTCLOUD_HOSTNAME}
-      - SPEEDTEST_HOSTNAME=${SPEEDTEST_HOSTNAME}
       - ADGUARD_HOSTNAME=${ADGUARD_HOSTNAME}
       - VAULTWARDEN_HOSTNAME=${VAULTWARDEN_HOSTNAME}
       - HA_HOSTNAME=${HA_HOSTNAME}
@@ -77,8 +75,6 @@ networks:
   Nextcloud:
     external: true
   CloudflareTunnel:
-    external: true
-  Speedtest:
     external: true
   VPA:
     external: true
