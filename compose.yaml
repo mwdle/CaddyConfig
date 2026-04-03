@@ -2,6 +2,7 @@ name: Caddy
 services:
   Caddy:
     image: mwdle/caddy:latest
+    user: "${UID}:${GID}"
     build:
       context: .
       dockerfile: ./Dockerfile
