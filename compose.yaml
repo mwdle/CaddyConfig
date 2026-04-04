@@ -9,7 +9,7 @@ services:
     restart: unless-stopped
     hostname: caddy
     ports:
-      - 80:80
+      - "80:80"
       - "443:443"
       - "443:443/udp"
     # Allow resolving host machine in order to reverse proxy Cockpit
@@ -64,6 +64,7 @@ services:
       - caddy_config:/config
 
     user: "${UID}:${GID}"
+    read_only: true
     security_opt:
       - no-new-privileges:true
 
