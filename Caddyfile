@@ -9,6 +9,10 @@
         }
 }
 
+http://127.0.0.1:8888 {
+    respond /health "OK" 200
+}
+
 (required) {
         header {
                 ?Cache-Control "max-age=43200, must-revalidate"
