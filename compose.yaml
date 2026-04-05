@@ -14,7 +14,7 @@ services:
       - "443:443/udp"
     # Allow resolving host machine in order to reverse proxy Cockpit
     extra_hosts:
-      - "host.docker.internal:host-gateway"
+      - host.docker.internal:host-gateway
     networks:
       Adguard:
       Vaultwarden:
@@ -75,7 +75,7 @@ services:
       - NET_BIND_SERVICE
 
     logging:
-      driver: "journald"
+      driver: journald
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://127.0.0.1:8888/health || exit 1
       interval: 1m
