@@ -41,6 +41,7 @@ services:
       Renovate:
         aliases:
           - ${GITEA_HOSTNAME} # Renovate connects to Gitea via Caddy
+      wg-easy:
     environment:
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
       - EMAIL=${EMAIL}
@@ -58,6 +59,7 @@ services:
       - GITEA_HOSTNAME=${GITEA_HOSTNAME}
       - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
       - ESPHOME_HOSTNAME=${ESPHOME_HOSTNAME}
+      - WG_EASY_HOSTNAME=${WG_EASY_HOSTNAME}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
@@ -116,6 +118,8 @@ networks:
   ESPHome:
     external: true
   Renovate:
+    external: true
+  wg-easy:
     external: true
 
 volumes:

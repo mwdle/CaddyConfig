@@ -243,3 +243,11 @@ http://127.0.0.1:8888 {
         import perms
         import esphome_csp
 }
+
+{$WG_EASY_HOSTNAME} {
+        reverse_proxy wg-easy:51821
+        import required
+        import cors
+        import perms
+        import csp
+}
