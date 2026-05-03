@@ -239,7 +239,7 @@ http://127.0.0.1:8888 {
 
 (esphome_csp) {
         header {
-                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self'; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'none';"
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self'; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self' https://schema.esphome.io; worker-src 'none';"
         }
 }
 
