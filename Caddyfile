@@ -230,6 +230,13 @@ http://127.0.0.1:8888 {
         import jenkins_csp
 }
 
+(esphome_perms) {
+        header {
+                ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), bluetooth=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(self), storage-access=(), speaker-selection=(), usb=(), web-share=(), xr-spatial-tracking=()"
+        }
+}
+
+
 (esphome_csp) {
         header {
                 ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self'; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'none';"
@@ -240,7 +247,7 @@ http://127.0.0.1:8888 {
         reverse_proxy ESPHome:6052
         import required
         import cors
-        import perms
+        import esphome_perms
         import esphome_csp
 }
 
