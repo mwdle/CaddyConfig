@@ -33,6 +33,7 @@ services:
         aliases:
           - ${GITEA_HOSTNAME} # Jenkins connects to Gitea via Caddy for repository access, webhook configuration, etc.
           - ${VAULTWARDEN_HOSTNAME} # Jenkins connects to Vaultwarden via Caddy for providing credentials.
+      MatterHub:
       MusicAssistant:
       Nextcloud:
       OpenWebUI:
@@ -56,6 +57,7 @@ services:
       - GITEA_HOSTNAME=${GITEA_HOSTNAME}
       - HA_HOSTNAME=${HA_HOSTNAME}
       - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
+      - MATTER_HUB_HOSTNAME=${MATTER_HUB_HOSTNAME}
       - MA_HOSTNAME=${MA_HOSTNAME}
       - NEXTCLOUD_HOSTNAME=${NEXTCLOUD_HOSTNAME}
       - OPENWEBUI_HOSTNAME=${OPENWEBUI_HOSTNAME}
@@ -108,6 +110,8 @@ networks:
   HomeAssistant:
     external: true
   Jenkins:
+    external: true
+  MatterHub:
     external: true
   MusicAssistant:
     external: true
