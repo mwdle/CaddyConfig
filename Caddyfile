@@ -182,12 +182,18 @@ http://127.0.0.1:8888 {
         import jenkins_csp
 }
 
+(matterhub_csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'self'; script-src 'self'; img-src 'self'; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'none'; worker-src 'none';"
+        }
+}
+
 {$MATTER_HUB_HOSTNAME} {
         reverse_proxy MatterHub:8482
         import required
         import cors
         import perms
-        import csp
+        import matterhub_csp
 }
 
 (ma_csp) {
