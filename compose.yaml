@@ -17,53 +17,55 @@ services:
       - host.docker.internal:host-gateway
     networks:
       Adguard:
-      Vaultwarden:
-      Nextcloud:
       CloudflareTunnel:
-      VPA:
+      ESPHome:
       Frigate:
-      MusicAssistant:
-      # Home Assistant connects to Frigate, Nextcloud, and Music Assistant via Caddy instead of Docker network for HTTPS access, no external routing via Cloudflare Tunnels, Music Assistant Music Art Proxy (avoids mixed content in browser), and increased isolation between containers/networks.
-      HomeAssistant:
-        aliases:
-          - ${MA_HOSTNAME}
-          - ${FRIGATE_HOSTNAME}
-          - ${NEXTCLOUD_HOSTNAME}
-      OpenWebUI:
       Gitea:
         aliases:
           - ${JENKINS_HOSTNAME} # Gitea connects to Jenkins via Caddy for webhooks
+      # Home Assistant connects to Frigate, Nextcloud, and Music Assistant via Caddy instead of Docker network for HTTPS access, no external routing via Cloudflare Tunnels, Music Assistant Music Art Proxy (avoids mixed content in browser), and increased isolation between containers/networks.
+      HomeAssistant:
+        aliases:
+          - ${FRIGATE_HOSTNAME}
+          - ${MA_HOSTNAME}
+          - ${NEXTCLOUD_HOSTNAME}
       Jenkins:
         aliases:
           - ${GITEA_HOSTNAME} # Jenkins connects to Gitea via Caddy for repository access, webhook configuration, etc.
           - ${VAULTWARDEN_HOSTNAME} # Jenkins connects to Vaultwarden via Caddy for providing credentials.
-      ESPHome:
+      MusicAssistant:
+      Nextcloud:
+      OpenWebUI:
       Renovate:
         aliases:
           - ${GITEA_HOSTNAME} # Renovate connects to Gitea via Caddy
+      Vaultwarden:
+      VPA:
       wg-easy:
     environment:
+      # Caddy variables
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
       - EMAIL=${EMAIL}
-      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
       - LOG_FILE=/data/access.log
-      - NEXTCLOUD_HOSTNAME=${NEXTCLOUD_HOSTNAME}
+      - TRUSTED_PROXIES=${TRUSTED_PROXIES}
+      # Hostnames
       - ADGUARD_HOSTNAME=${ADGUARD_HOSTNAME}
-      - VAULTWARDEN_HOSTNAME=${VAULTWARDEN_HOSTNAME}
-      - HA_HOSTNAME=${HA_HOSTNAME}
-      - VPA_HOSTNAME=${VPA_HOSTNAME}
-      - FRIGATE_HOSTNAME=${FRIGATE_HOSTNAME}
-      - MA_HOSTNAME=${MA_HOSTNAME}
       - COCKPIT_HOSTNAME=${COCKPIT_HOSTNAME}
-      - OPENWEBUI_HOSTNAME=${OPENWEBUI_HOSTNAME}
-      - GITEA_HOSTNAME=${GITEA_HOSTNAME}
-      - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
       - ESPHOME_HOSTNAME=${ESPHOME_HOSTNAME}
+      - FRIGATE_HOSTNAME=${FRIGATE_HOSTNAME}
+      - GITEA_HOSTNAME=${GITEA_HOSTNAME}
+      - HA_HOSTNAME=${HA_HOSTNAME}
+      - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
+      - MA_HOSTNAME=${MA_HOSTNAME}
+      - NEXTCLOUD_HOSTNAME=${NEXTCLOUD_HOSTNAME}
+      - OPENWEBUI_HOSTNAME=${OPENWEBUI_HOSTNAME}
+      - VAULTWARDEN_HOSTNAME=${VAULTWARDEN_HOSTNAME}
+      - VPA_HOSTNAME=${VPA_HOSTNAME}
       - WG_EASY_HOSTNAME=${WG_EASY_HOSTNAME}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
       - caddy_config:/config
+      - caddy_data:/data
 
     user: "${UID}:${GID}"
     read_only: true
@@ -95,33 +97,33 @@ services:
 networks:
   Adguard:
     external: true
-  Vaultwarden:
-    external: true
-  Nextcloud:
-    external: true
   CloudflareTunnel:
-    external: true
-  VPA:
-    external: true
-  Frigate:
-    external: true
-  HomeAssistant:
-    external: true
-  MusicAssistant:
-    external: true
-  OpenWebUI:
-    external: true
-  Gitea:
-    external: true
-  Jenkins:
     external: true
   ESPHome:
     external: true
+  Frigate:
+    external: true
+  Gitea:
+    external: true
+  HomeAssistant:
+    external: true
+  Jenkins:
+    external: true
+  MusicAssistant:
+    external: true
+  Nextcloud:
+    external: true
+  OpenWebUI:
+    external: true
   Renovate:
+    external: true
+  Vaultwarden:
+    external: true
+  VPA:
     external: true
   wg-easy:
     external: true
 
 volumes:
-  caddy_data:
   caddy_config:
+  caddy_data:
