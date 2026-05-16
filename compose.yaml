@@ -64,8 +64,10 @@ services:
       - VAULTWARDEN_HOSTNAME=${VAULTWARDEN_HOSTNAME}
       - VPA_HOSTNAME=${VPA_HOSTNAME}
       - WG_EASY_HOSTNAME=${WG_EASY_HOSTNAME}
+    configs:
+      - source: caddyfile
+        target: /etc/caddy/Caddyfile
     volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_config:/config
       - caddy_data:/data
 
@@ -127,6 +129,10 @@ networks:
     external: true
   wg-easy:
     external: true
+
+configs:
+  caddyfile:
+    file: ./Caddyfile
 
 volumes:
   caddy_config:
