@@ -19,6 +19,9 @@ services:
       Adguard:
       CloudflareTunnel:
       ESPHome:
+      forgejo:
+        aliases:
+          - ${JENKINS_HOSTNAME} # Forgejo connects to Jenkins via Caddy for webhooks
       Frigate:
       Gitea:
         aliases:
@@ -31,6 +34,7 @@ services:
           - ${NEXTCLOUD_HOSTNAME}
       Jenkins:
         aliases:
+          - ${FORGEJO_HOSTNAME} # Jenkins connects to Forgejo via Caddy for repository access, webhook configuration, etc.
           - ${GITEA_HOSTNAME} # Jenkins connects to Gitea via Caddy for repository access, webhook configuration, etc.
           - ${VAULTWARDEN_HOSTNAME} # Jenkins connects to Vaultwarden via Caddy for providing credentials.
       MatterHub:
@@ -39,6 +43,7 @@ services:
       OpenWebUI:
       Renovate:
         aliases:
+          - ${FORGEJO_HOSTNAME} # Renovate connects to Forgejo via Caddy
           - ${GITEA_HOSTNAME} # Renovate connects to Gitea via Caddy
       Vaultwarden:
       VPA:
@@ -53,6 +58,7 @@ services:
       - ADGUARD_HOSTNAME=${ADGUARD_HOSTNAME}
       - COCKPIT_HOSTNAME=${COCKPIT_HOSTNAME}
       - ESPHOME_HOSTNAME=${ESPHOME_HOSTNAME}
+      - FORGEJO_HOSTNAME=${FORGEJO_HOSTNAME}
       - FRIGATE_HOSTNAME=${FRIGATE_HOSTNAME}
       - GITEA_HOSTNAME=${GITEA_HOSTNAME}
       - HA_HOSTNAME=${HA_HOSTNAME}
@@ -104,6 +110,8 @@ networks:
   CloudflareTunnel:
     external: true
   ESPHome:
+    external: true
+  forgejo:
     external: true
   Frigate:
     external: true
