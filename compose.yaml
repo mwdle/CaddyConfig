@@ -40,7 +40,6 @@ services:
       Renovate:
         aliases:
           - ${FORGEJO_HOSTNAME} # Renovate connects to Forgejo via Caddy
-          - ${GITEA_HOSTNAME} # Renovate connects to Gitea via Caddy
       Vaultwarden:
       VPA:
       wg-easy:
