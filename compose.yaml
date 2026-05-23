@@ -22,6 +22,7 @@ services:
       forgejo:
         aliases:
           - ${JENKINS_HOSTNAME} # Forgejo connects to Jenkins via Caddy for webhooks
+          - ${GITEA_HOSTNAME} # Forgejo connect to Gitea via Caddy for migrations
       Frigate:
       Gitea:
         aliases:
