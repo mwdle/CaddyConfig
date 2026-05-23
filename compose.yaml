@@ -22,11 +22,7 @@ services:
       forgejo:
         aliases:
           - ${JENKINS_HOSTNAME} # Forgejo connects to Jenkins via Caddy for webhooks
-          - ${GITEA_HOSTNAME} # Forgejo connect to Gitea via Caddy for migrations
       Frigate:
-      Gitea:
-        aliases:
-          - ${JENKINS_HOSTNAME} # Gitea connects to Jenkins via Caddy for webhooks
       # Home Assistant connects to Frigate, Nextcloud, and Music Assistant via Caddy instead of Docker network for HTTPS access, no external routing via Cloudflare Tunnels, Music Assistant Music Art Proxy (avoids mixed content in browser), and increased isolation between containers/networks.
       HomeAssistant:
         aliases:
@@ -36,7 +32,6 @@ services:
       Jenkins:
         aliases:
           - ${FORGEJO_HOSTNAME} # Jenkins connects to Forgejo via Caddy for repository access, webhook configuration, etc.
-          - ${GITEA_HOSTNAME} # Jenkins connects to Gitea via Caddy for repository access, webhook configuration, etc.
           - ${VAULTWARDEN_HOSTNAME} # Jenkins connects to Vaultwarden via Caddy for providing credentials.
       MatterHub:
       MusicAssistant:
@@ -61,7 +56,6 @@ services:
       - ESPHOME_HOSTNAME=${ESPHOME_HOSTNAME}
       - FORGEJO_HOSTNAME=${FORGEJO_HOSTNAME}
       - FRIGATE_HOSTNAME=${FRIGATE_HOSTNAME}
-      - GITEA_HOSTNAME=${GITEA_HOSTNAME}
       - HA_HOSTNAME=${HA_HOSTNAME}
       - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
       - MATTER_HUB_HOSTNAME=${MATTER_HUB_HOSTNAME}
@@ -115,8 +109,6 @@ networks:
   forgejo:
     external: true
   Frigate:
-    external: true
-  Gitea:
     external: true
   HomeAssistant:
     external: true

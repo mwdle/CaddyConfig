@@ -148,20 +148,6 @@ http://127.0.0.1:8888 {
         import frigate_csp
 }
 
-(gitea_csp) {
-        header {
-                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src data:; object-src 'none'; font-src data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' data: https://img.shields.io https://media.giphy.com https://komarev.com https://github-readme-stats.vercel.app https://raw.githubusercontent.com https://avatars.githubusercontent.com https://developer.mend.io; media-src 'none'; frame-ancestors 'none'; form-action 'self' http://127.0.0.1:*; connect-src 'self'; worker-src 'self';"
-        }
-}
-
-{$GITEA_HOSTNAME} {
-        reverse_proxy Gitea:3000
-        import required
-        import embedder_cors
-        import perms
-        import gitea_csp
-}
-
 (homeassistant_perms) {
         header {
                 ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), bluetooth=(), display-capture=(), encrypted-media=(), fullscreen=(self), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), speaker-selection=(self), usb=(), web-share=(), xr-spatial-tracking=()"
