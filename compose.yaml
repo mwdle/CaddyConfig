@@ -12,9 +12,6 @@ services:
       - "80:80"
       - "443:443"
       - "443:443/udp"
-    # Allow resolving host machine in order to reverse proxy Cockpit
-    extra_hosts:
-      - host.docker.internal:host-gateway
     networks:
       Adguard:
       CloudflareTunnel:
@@ -70,6 +67,7 @@ services:
     volumes:
       - caddy_config:/config
       - caddy_data:/data
+      - /run/cockpit.sock:/run/cockpit.sock
 
     user: "${UID}:${GID}"
     read_only: true
