@@ -13,7 +13,6 @@ services:
       - "443:443"
       - "443:443/udp"
     networks:
-      Adguard:
       CloudflareTunnel:
       ESPHome:
       forgejo:
@@ -47,7 +46,6 @@ services:
       - LOG_FILE=/data/access.log
       - TRUSTED_PROXIES=${TRUSTED_PROXIES}
       # Hostnames
-      - ADGUARD_HOSTNAME=${ADGUARD_HOSTNAME}
       - COCKPIT_HOSTNAME=${COCKPIT_HOSTNAME}
       - ESPHOME_HOSTNAME=${ESPHOME_HOSTNAME}
       - FORGEJO_HOSTNAME=${FORGEJO_HOSTNAME}
@@ -97,8 +95,6 @@ services:
           pids: 50
 
 networks:
-  Adguard:
-    external: true
   CloudflareTunnel:
     external: true
   ESPHome:
