@@ -85,7 +85,7 @@ http://127.0.0.1:8888 {
 {$ESPHOME_HOSTNAME} {
         reverse_proxy ESPHome:6052
         import required
-        import cors
+        import embedder_cors
         import esphome_perms
         import esphome_csp
 }
