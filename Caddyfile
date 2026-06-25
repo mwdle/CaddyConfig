@@ -124,7 +124,7 @@ http://127.0.0.1:8888 {
                 }
         }
         import required
-        import resource_cors
+        import cors
         import frigate_perms
         import frigate_csp
 }
