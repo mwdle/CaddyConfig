@@ -163,20 +163,6 @@ http://127.0.0.1:8888 {
         import jenkins_csp
 }
 
-(matterhub_csp) {
-        header {
-                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' https://www.zigbee2mqtt.io; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'none';"
-        }
-}
-
-{$MATTER_HUB_HOSTNAME} {
-        reverse_proxy MatterHub:8482
-        import required
-        import embedder_cors
-        import perms
-        import matterhub_csp
-}
-
 (ma_csp) {
         header {
                 ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'self'; object-src 'none'; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' https://assets.fanart.tv data: https://images.weserv.nl https://i.scdn.co https://ui-avatars.com ; media-src 'self'; frame-ancestors 'self' https://{$HA_HOSTNAME}; form-action 'none'; connect-src 'self'; worker-src 'self';"
