@@ -19,12 +19,11 @@ services:
         aliases:
           - ${JENKINS_HOSTNAME} # Forgejo connects to Jenkins via Caddy for webhooks
       Frigate:
-      # Home Assistant connects to Frigate, Nextcloud, and Music Assistant via Caddy instead of Docker network for HTTPS access, no external routing via Cloudflare Tunnels, Music Assistant Music Art Proxy (avoids mixed content in browser), and increased isolation between containers/networks.
+      # Home Assistant connects to Frigate and Music Assistant via Caddy instead of Docker network for HTTPS access, no external routing via Cloudflare Tunnels, Music Assistant Music Art Proxy (avoids mixed content in browser), and increased isolation between containers/networks.
       HomeAssistant:
         aliases:
           - ${FRIGATE_HOSTNAME}
           - ${MA_HOSTNAME}
-          - ${NEXTCLOUD_HOSTNAME}
       Jenkins:
         aliases:
           - ${FORGEJO_HOSTNAME} # Jenkins connects to Forgejo via Caddy for repository access, webhook configuration, etc.
