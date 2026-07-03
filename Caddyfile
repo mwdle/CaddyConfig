@@ -131,7 +131,7 @@ http://127.0.0.1:8888 {
 
 (homeassistant_perms) {
         header {
-                ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), bluetooth=(), display-capture=(), encrypted-media=(), fullscreen=(self), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), speaker-selection=(self), usb=(), web-share=(), xr-spatial-tracking=()"
+                ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), camera=(), bluetooth=(), display-capture=(), encrypted-media=(), fullscreen=(self), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(self), midi=(), payment=(), picture-in-picture=(self), publickey-credentials-get=(), screen-wake-lock=(), serial=(), storage-access=(), speaker-selection=(self), usb=(), web-share=(), xr-spatial-tracking=()"
         }
 }
 
