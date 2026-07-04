@@ -36,7 +36,6 @@ services:
           - ${FORGEJO_HOSTNAME} # Renovate connects to Forgejo via Caddy
       Vaultwarden:
       VPA:
-      wg-easy:
     environment:
       # Caddy variables
       - CLOUDFLARE_API_TOKEN=${CLOUDFLARE_API_TOKEN}
@@ -55,7 +54,6 @@ services:
       - OPENWEBUI_HOSTNAME=${OPENWEBUI_HOSTNAME}
       - VAULTWARDEN_HOSTNAME=${VAULTWARDEN_HOSTNAME}
       - VPA_HOSTNAME=${VPA_HOSTNAME}
-      - WG_EASY_HOSTNAME=${WG_EASY_HOSTNAME}
     configs:
       - source: caddyfile
         target: /etc/caddy/Caddyfile
@@ -115,8 +113,6 @@ networks:
   Vaultwarden:
     external: true
   VPA:
-    external: true
-  wg-easy:
     external: true
 
 configs:
