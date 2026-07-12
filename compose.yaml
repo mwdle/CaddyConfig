@@ -24,12 +24,14 @@ services:
         aliases:
           - ${FRIGATE_HOSTNAME}
           - ${MA_HOSTNAME}
+          - ${NTFY_HOSTNAME}
       Jenkins:
         aliases:
           - ${FORGEJO_HOSTNAME} # Jenkins connects to Forgejo via Caddy for repository access, webhook configuration, etc.
           - ${VAULTWARDEN_HOSTNAME} # Jenkins connects to Vaultwarden via Caddy for providing credentials.
       MusicAssistant:
       Nextcloud:
+      ntfy:
       OpenWebUI:
       Renovate:
         aliases:
@@ -51,6 +53,7 @@ services:
       - JENKINS_HOSTNAME=${JENKINS_HOSTNAME}
       - MA_HOSTNAME=${MA_HOSTNAME}
       - NEXTCLOUD_HOSTNAME=${NEXTCLOUD_HOSTNAME}
+      - NTFY_HOSTNAME=${NTFY_HOSTNAME}
       - OPENWEBUI_HOSTNAME=${OPENWEBUI_HOSTNAME}
       - VAULTWARDEN_HOSTNAME=${VAULTWARDEN_HOSTNAME}
       - VPA_HOSTNAME=${VPA_HOSTNAME}
@@ -105,6 +108,8 @@ networks:
   MusicAssistant:
     external: true
   Nextcloud:
+    external: true
+  ntfy:
     external: true
   OpenWebUI:
     external: true

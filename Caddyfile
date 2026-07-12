@@ -190,6 +190,14 @@ http://127.0.0.1:8888 {
         import nextcloud_perms
 }
 
+{$NTFY_HOSTNAME} {
+        reverse_proxy ntfy
+        import required
+        import cors
+        import perms
+        import csp
+}
+
 (openwebui_csp) {
         header {
                 ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'self'; object-src 'none'; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data: https://img.shields.io https://*.blob.core.windows.net; media-src 'self'; frame-ancestors 'none'; form-action 'none'; connect-src 'self'; worker-src 'self' blob:;"
