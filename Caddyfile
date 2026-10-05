@@ -3,7 +3,7 @@
         email {file./run/secrets/email}
         acme_dns cloudflare {file./run/secrets/cloudflare_api_token}
         servers {
-                trusted_proxies static 172.16.0.0/16
+                trusted_proxies static 10.89.0.0/16
                 trusted_proxies_strict
                 client_ip_headers Cf-Connecting-Ip X-Forwarded-For X-Real-IP
         }
