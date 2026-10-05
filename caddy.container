@@ -26,6 +26,7 @@ Group=1000
 UserNS=auto
 NoNewPrivileges=true
 DropCapability=all
+AddCapability=NET_BIND_SERVICE
 
 HealthStartupCmd=wget --no-verbose --tries=1 --spider http://localhost:8888/health || exit 1
 HealthStartupInterval=5s
