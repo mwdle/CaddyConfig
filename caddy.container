@@ -3,6 +3,7 @@ Image=caddy.build
 Pull=never
 ContainerName=caddy
 
+Network=cloudflare-tunnel.network
 Network=jenkins.network:alias=git.mwdle.com,alias=vault.mwdle.com
 Network=vpa.network
 
