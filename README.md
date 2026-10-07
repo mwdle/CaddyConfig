@@ -1,8 +1,6 @@
 # Caddy Configuration
 
-This repository builds and runs Caddy as a rootless Podman Quadlet. The shared
-`jenkins.network` and `vpa.network` Quadlets from the `podman-networks`
-repository are required.
+This repository builds and runs Caddy as a rootless Podman Quadlet.
 
 Rootless publishing on ports 80 and 443 requires
 `net.ipv4.ip_unprivileged_port_start` to be 80 or lower on the host.
