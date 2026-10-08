@@ -160,7 +160,7 @@ http://127.0.0.1:8888 {
         }
 }
 
-jenkins.mwdle.com {
+jenkins-podman.mwdle.com {
         reverse_proxy jenkins:8080
         import required
         import cors
