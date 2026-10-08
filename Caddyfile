@@ -3,7 +3,8 @@
         email {file./run/secrets/email}
         acme_dns cloudflare {file./run/secrets/cloudflare_api_token}
         servers {
-                trusted_proxies static 10.89.0.0/16
+                # Trust the Cloudflare Tunnel network subnet so Caddy can accept forwarded client IPs
+                trusted_proxies static 10.90.0.0/24
                 trusted_proxies_strict
                 client_ip_headers Cf-Connecting-Ip X-Forwarded-For X-Real-IP
         }
@@ -62,6 +63,18 @@ http://127.0.0.1:8888 {
         }
 }
 
+# TODO: remove the following wildcard after Docker -> Podman migration is complete
+*.mwdle.com {
+	reverse_proxy host.containers.internal:8443 {
+		header_up Host {hostport}
+
+		transport http {
+			tls
+			tls_server_name {host}
+		}
+	}
+}
+
 (esphome_perms) {
         header {
                 ?Permissions-Policy "accelerometer=(), ambient-light-sensor=(), autoplay=(), bluetooth=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(), gamepad=(), geolocation=(), gyroscope=(), hid=(), idle-detection=(), magnetometer=(), microphone=(), midi=(), payment=(), picture-in-picture=(), publickey-credentials-get=(), screen-wake-lock=(), serial=(self), storage-access=(), speaker-selection=(), usb=(), web-share=(), xr-spatial-tracking=()"
@@ -72,17 +85,6 @@ http://127.0.0.1:8888 {
         header {
                 ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'none'; object-src 'none'; font-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' https://esphome.io; media-src 'none'; frame-ancestors 'none'; form-action 'none'; connect-src 'self' https://schema.esphome.io data:; worker-src 'none';"
         }
-}
-
-*.mwdle.com {
-	reverse_proxy host.containers.internal:8443 {
-		header_up Host {hostport}
-
-		transport http {
-			tls
-			tls_server_name {host}
-		}
-	}
 }
 
 #esp.mwdle.com {
@@ -151,21 +153,21 @@ http://127.0.0.1:8888 {
 #        import homeassistant_perms
 #        import homeassistant_csp
 #}
-#
-#(jenkins_csp) {
-#        header {
-#                ?Content-Security-Policy "default-src 'none'; frame-src 'self'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; media-src 'none'; frame-ancestors 'self'; form-action 'self'; connect-src 'self'; worker-src 'none';"
-#        }
-#}
-#
-#jenkins.mwdle.com {
-#        reverse_proxy Jenkins:8080
-#        import required
-#        import cors
-#        import perms
-#        import jenkins_csp
-#}
-#
+
+(jenkins_csp) {
+        header {
+                ?Content-Security-Policy "default-src 'none'; frame-src 'self'; manifest-src 'none'; object-src 'none'; font-src 'none'; style-src 'self' 'unsafe-inline'; script-src 'self'; img-src 'self' data:; media-src 'none'; frame-ancestors 'self'; form-action 'self'; connect-src 'self'; worker-src 'none';"
+        }
+}
+
+jenkins.mwdle.com {
+        reverse_proxy jenkins:8080
+        import required
+        import cors
+        import perms
+        import jenkins_csp
+}
+
 #(ma_csp) {
 #        header {
 #                ?Content-Security-Policy "default-src 'none'; frame-src 'none'; manifest-src 'self'; object-src 'none'; font-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; img-src 'self' https://assets.fanart.tv data: https://images.weserv.nl https://i.scdn.co https://ui-avatars.com ; media-src 'self'; frame-ancestors 'self' https://home.mwdle.com; form-action 'none'; connect-src 'self'; worker-src 'self';"
@@ -242,7 +244,7 @@ http://127.0.0.1:8888 {
 }
 
 vpa.mwdle.com {
-        reverse_proxy VPA:3000
+        reverse_proxy vpa:3000
         import required
         import cors
         import perms
