@@ -6,4 +6,6 @@ FROM docker.io/library/caddy:2.11.7-alpine@sha256:d8542f48d34a9cf4e4c11a47886522
 
 COPY --from=builder /usr/bin/caddy /usr/bin/caddy
 
+USER caddy
+
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s CMD wget --no-verbose --tries=1 --spider http://localhost:8888/health || exit 1
