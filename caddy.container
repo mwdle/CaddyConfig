@@ -5,6 +5,7 @@ ContainerName=caddy
 
 Network=cloudflare-tunnel
 Network=jenkins:alias=git.mwdle.com,alias=vault.mwdle.com
+Network=vaultwarden
 Network=vpa
 
 PublishPort=80:80

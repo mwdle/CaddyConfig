@@ -228,14 +228,14 @@ jenkins.mwdle.com {
 #        import openwebui_perms
 #        import openwebui_csp
 #}
-#
-#vault.mwdle.com {
-#        reverse_proxy Vaultwarden:80
-#        import required
-#        import cors
-#        import perms
-#        import csp # Strict Fallback - Vaultwarden already provides a CSP
-#}
+
+vault.mwdle.com {
+        reverse_proxy vaultwarden:80
+        import required
+        import cors
+        import perms
+        import csp # fallback - Vaultwarden already provides a CSP
+}
 
 (vpa_csp) {
         header {
